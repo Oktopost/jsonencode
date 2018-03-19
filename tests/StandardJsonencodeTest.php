@@ -1,24 +1,8 @@
 <?php
 class StandardJsonencodeTest extends JsonencodeTestCase
 {
-	private const INVALID_STRINGS 		= "hello \0,,\u{d83d},😠,\\,\",\n,\r,' world";
-	private const EXPECTED_INVALID_JSON = "hello \\u0000,\\u001f,\u{d83d},😠,\\\\,\\\",\\n,\\r,' world";
-	
-	
-	private static function invalidStr(): string
-	{
-		return self::INVALID_STRINGS;
-	}
-	
-	private static function invalidStrEncoding($into = null): string
-	{
-		$str = self::EXPECTED_INVALID_JSON;
-		
-		if ($into)
-			$str = str_replace('{inv}', $str, $into);
-		
-		return $str;
-	}
+	public const INVALID_STRINGS 				= "hello \0,,\u{d83d},😠,\\,\",\n,\r,' world";
+	public const EXPECTED_INVALID_JSON_ENCODING = "hello \\u0000,\\u001f,\u{d83d},😠,\\\\,\\\",\\n,\\r,' world";
 	
 	
 	public function test_EmptyArray()
@@ -58,6 +42,24 @@ class StandardJsonencodeTest extends JsonencodeTestCase
 	{
 		self::assertValueEncode(['a', 'b', 'c']);
 	}
+	
+	
+	public function test_InvalidStringWithArray_WithForceJsonObject()
+	{
+		self::assertSame(
+			self::invalidStrEncoding('{"0":"a","1":"{inv}"}'), 
+			jsonencode(['a', self::INVALID_STRINGS], JSON_FORCE_OBJECT)
+		);
+	}
+	
+	public function test_InvalidStringWithArray_WithoutForceJsonObject()
+	{
+		self::assertSame(
+			self::invalidStrEncoding('["a","{inv}"]'), 
+			jsonencode(['a', self::INVALID_STRINGS])
+		);
+	}
+	
 	
 	
 	public function test_Depth()
@@ -134,5 +136,3 @@ class StandardJsonencodeTest extends JsonencodeTestCase
 		self::assertTrue(strlen($res) >= 10240);
 	}
 }
-
-

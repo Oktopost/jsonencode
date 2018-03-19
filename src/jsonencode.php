@@ -13,9 +13,7 @@ function jsonencode($value, $options = null, ?int $depth = null)
 	
 	// Setup options
 	{
-		if (is_null($options))
-			$options = $opt;
-		else if (is_array($options))
+		if (is_array($options))
 			$options = array_merge($opt, $options);
 		else if (is_int($options))
 			$options = array_merge($opt, ['flag' => $options]);
@@ -41,7 +39,7 @@ function jsonencode($value, $options = null, ?int $depth = null)
 				'\\',
 				'"',
 				"\0",
-				'',
+				"\u{001f}",
 				
 				// Escaped for easier debugging. Make sure new lines will not break logs output.
 				"\n",

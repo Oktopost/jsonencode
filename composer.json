@@ -14,7 +14,10 @@
 		"satooshi/php-coveralls": "^1.0"
 	},
     "autoload": {
-		"files": ["src/jsonencode.php"]
+		"files": [
+			"src/jsonencode.php",
+			"src/jsondecode.php"
+		]
 	},
 	"scripts": {
 		"test": "./vendor/phpunit/phpunit/phpunit --dont-report-useless-tests",
