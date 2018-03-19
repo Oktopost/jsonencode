@@ -115,6 +115,14 @@ class StandardJsonencodeTest extends JsonencodeTestCase
 		self::assertValueEncode(['a' => 'a', 1 => 'b', 2 => 'c']);
 	}
 	
+	public function test_NumericObjectNameWithInvalidValueParsedAsStringKey()
+	{
+		self::assertSame(
+			self::invalidStrEncoding('{"1":"{inv}"}'), 
+			jsonencode([1 => self::invalidStr()])
+		);
+	}
+	
 	
 	public function test_sanity()
 	{

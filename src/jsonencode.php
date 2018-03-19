@@ -72,7 +72,7 @@ function jsonencode($value, $options = null, ?int $depth = null)
 		{
 			$isNumeric = $isNumeric && ($key === $expectedNumericKey++);
 			
-			$key = jsonencode($key, $options);
+			$key = jsonencode((string)$key, $options);
 			
 			if ($key === false)
 				return false;
