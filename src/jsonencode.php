@@ -32,33 +32,33 @@ function jsonencode($value, $options = null, ?int $depth = null)
 	
 	if (is_string($value))
 	{
-		$len = mb_strlen($value);
-		$chars = [];
+		/**
+		 * Following RFC standard.
+ 		 * @link https://tools.ietf.org/html/rfc7159
+		 */
+		$value = str_replace(
+			[
+				'\\',
+				'"',
+				"\0",
+				'',
+				
+				// Escaped for easier debugging. Make sure new lines will not break logs output.
+				"\n",
+				"\r"
+			],
+			[
+				'\\\\',
+				'\"',
+				'\u0000',
+				'\u001f',
+				
+				'\n',
+				'\r'
+			],
+			$value);
 		
-		for ($i = 0; $i < $len; $i++)
-		{
-			$char = mb_substr($value, $i, 1);
-			
-			if (json_decode($char, $options['flag']) === $char)
-			{
-				$char[] = $char;
-				continue;
-			}
-			
-			$encodedChar = json_encode($char, $options['flag']);
-			
-			if ($encodedChar === false)
-			{
-				$chars[] = $char;
-			}
-			else
-			{
-				// Remove the generated " character by json_encode.
-				$chars[] = substr($encodedChar, 1, strlen($char) - 2);
-			}
-		}
-		
-		return '"' . implode('', $chars) . '"';
+		return '"' . $value . '"';
 	}
 	else
 	{
@@ -101,7 +101,4 @@ function jsonencode($value, $options = null, ?int $depth = null)
 			return '{' . implode(',', $items) . '}'; 
 		}
 	}
-	
-	
-	return false;
 }
