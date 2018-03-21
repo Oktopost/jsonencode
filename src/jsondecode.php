@@ -39,16 +39,72 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 			$rand = '-p-' . mt_rand(-$range, $range) . '-';
 		}
 	}
-	
-	// State machine 
-	
-	// OR Mb
-	$firstPost = mb_strpos($value, '"', $pos);
-	$lastPost = mb_strpos($value, '"', $firstPost + 1);
-	
-	$key = $rand . '-1-';
-	$decoded = [$key => ''];
+		
+	$decoded = [];
 	$success = [];
+	
+	$i = 1;
+	$lastPos = 0;
+	
+	while ($lastPos < (strlen($value) - 1))
+	{
+		$firstPos = strpos($value, '"', $lastPos);
+		
+		if ($firstPos === false)
+			break;
+		
+		$lastPos = strpos($value, '"', $firstPos + 1);
+		
+		if ($lastPos === false)
+			break;
+		
+		$part = substr($value, $firstPos, $lastPos - $firstPos + 1);
+		$result = json_decode($part, $options['assoc'], $options['depth'], $options['flag']);
+		
+		if (!is_null($result) || json_last_error() != JSON_ERROR_UTF8)
+		{
+			$decoded[] = $part;
+		}
+		else
+		{
+			$key =  $rand . "-{$i}-";
+			$success[$key] = substr($part, 1, -1);
+		}
+		
+		$i++;
+	}
+	
+	foreach ($success as $key => $part)
+	{
+		$value = str_replace('"' . $part . '"', '"' . $key . '"', $value);
+	}
+	
+	$result = json_decode($value, $options['assoc'], $options['depth'], $options['flag']);
+		
+	if ($success && !is_null($result) && json_last_error() != JSON_ERROR_UTF8)
+	{
+		$iterator = function ($data, array $success) use (&$iterator)
+		{
+			if (is_string($data))
+			{
+				return str_replace(array_keys($success), array_values($success), $data);
+			}
 
-	return false;
+			$keys = array_keys($success);
+			
+			foreach ($data as $key => &$value)
+			{
+				if (!is_string($value) || in_array($value, $keys))
+				{
+					$value = $iterator($value, $success);
+				}
+			}
+			
+			return $data;
+		};
+		
+		$result = $iterator($result, $success);
+	}
+	
+	return $result;
 }
