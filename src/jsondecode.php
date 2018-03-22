@@ -94,7 +94,8 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 			
 			foreach ($data as $key => &$value)
 			{
-				if (!is_string($value) || in_array($value, $keys))
+				if (is_object($value) || is_array($value) ||
+					(is_string($value) && in_array($value, $keys)))
 				{
 					$value = $iterator($value, $success);
 				}
