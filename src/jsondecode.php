@@ -74,9 +74,31 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 		$i++;
 	}
 	
-	foreach ($success as $key => $part)
+	foreach ($success as $key => &$part)
 	{
 		$value = str_replace('"' . $part . '"', '"' . $key . '"', $value);
+		
+		$part = str_replace(
+			[
+				'\\\\',
+				'\"',
+				'\u0000',
+				'\u001f',
+				
+				'\n',
+				'\r'
+			],
+			[
+				'\\',
+				'"',
+				"\0",
+				"\u{001f}",
+				
+				// Escaped for easier debugging. Make sure new lines will not break logs output.
+				"\n",
+				"\r"
+			],
+			$part);
 	}
 	
 	$result = json_decode($value, $options['assoc'], $options['depth'], $options['flag']);

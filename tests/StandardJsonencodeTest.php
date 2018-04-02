@@ -1,10 +1,6 @@
 <?php
 class StandardJsonencodeTest extends JsonencodeTestCase
 {
-	public const INVALID_STRINGS 				= "hello \0,,\u{d83d},😠,\\,\",\n,\r,' world";
-	public const EXPECTED_INVALID_JSON_ENCODING = "hello \\u0000,\\u001f,\u{d83d},😠,\\\\,\\\",\\n,\\r,' world";
-	
-	
 	public function test_EmptyArray()
 	{
 		self::assertValueEncode([]);
