@@ -46,14 +46,47 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 	$i = 1;
 	$lastPos = 0;
 	
+	$getNextQuote = function (string $value, int $position, int $offset = 0) use (&$getNextQuote)
+	{
+		$quotePosition = strpos($value, '"', $position + $offset);
+		
+		if ($quotePosition === false)
+			return false;
+		
+		$slashPosition = $quotePosition - 1;
+		$slashCounter = 0;
+		
+		while ($slashPosition > 0)
+		{
+			$symbol = $value[$slashPosition];
+			$slashPosition = $slashPosition - 1;
+
+			if ($symbol != '\\')
+				break;
+
+			$slashCounter++;
+		}
+		
+		$isEscaped = $slashCounter % 2 != 0;
+		
+		if ($isEscaped && $quotePosition + 1 < strlen($value))
+		{
+			return $getNextQuote($value, $quotePosition, 1);
+		}
+		
+		return !$isEscaped ? $quotePosition : false;
+	};
+	
 	while ($lastPos < (strlen($value) - 1))
 	{
-		$firstPos = strpos($value, '"', $lastPos);
+		$firstPos = $getNextQuote($value, $lastPos);
+//		$firstPos = strpos($value, '"', $lastPos);
 		
 		if ($firstPos === false)
 			break;
 		
-		$lastPos = strpos($value, '"', $firstPos + 1);
+		$lastPos = $getNextQuote($value, $firstPos, 1);
+//		$lastPos = strpos($value, '"', $firstPos + 1);
 		
 		if ($lastPos === false)
 			break;
