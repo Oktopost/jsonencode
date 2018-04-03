@@ -43,9 +43,6 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 	$decoded = [];
 	$success = [];
 	
-	$i = 1;
-	$lastPos = 0;
-	
 	$getNextQuote = function (string $value, int $position, int $offset = 0) use (&$getNextQuote)
 	{
 		$quotePosition = strpos($value, '"', $position + $offset);
@@ -76,6 +73,9 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 		
 		return !$isEscaped ? $quotePosition : false;
 	};
+	
+	$i = 1;
+	$lastPos = 0;
 	
 	while ($lastPos < (strlen($value) - 1))
 	{

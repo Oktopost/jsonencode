@@ -4,6 +4,10 @@
         {
             "name": "Alexey Puchkov",
             "email": "alexey.pkv@gmail.com"
+        },
+        {
+            "name": "Ivan Demchenkov",
+            "email": "demchenkov.ivan@gmail.com"
         }
     ],
     "require": {
