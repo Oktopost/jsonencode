@@ -80,13 +80,11 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 	while ($lastPos < (strlen($value) - 1))
 	{
 		$firstPos = $getNextQuote($value, $lastPos);
-//		$firstPos = strpos($value, '"', $lastPos);
 		
 		if ($firstPos === false)
 			break;
 		
 		$lastPos = $getNextQuote($value, $firstPos, 1);
-//		$lastPos = strpos($value, '"', $firstPos + 1);
 		
 		if ($lastPos === false)
 			break;
