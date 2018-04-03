@@ -1,5 +1,8 @@
 {
     "name": "oktopost/jsonencode",
+    "description": "Fix the behavior of json_encode and json_decode",
+	"type": "library",
+	"license": "MIT",
     "authors": [
         {
             "name": "Alexey Puchkov",
