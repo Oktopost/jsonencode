@@ -134,7 +134,7 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 	
 	$result = json_decode($value, $options['assoc'], $options['depth'], $options['flag']);
 		
-	if ($success && !is_null($result) && json_last_error() != JSON_ERROR_UTF8)
+	if ($success && !is_null($result))
 	{
 		$iterator = function ($data, array $success) use (&$iterator)
 		{
