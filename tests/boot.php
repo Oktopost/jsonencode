@@ -2,6 +2,7 @@
 class JsonencodeTestCase extends PHPUnit\Framework\TestCase
 {
 	public const INVALID_STRINGS 				= "hello \0,,\u{d83d},😠,\\,\",\n,\r,' world";
+	public const INVALID_CHAR 					= "\u{d83d}";
 	public const EXPECTED_INVALID_JSON_ENCODING = "hello \\u0000,\\u001f,\u{d83d},😠,\\\\,\\\",\\n,\\r,' world";
 	
 	

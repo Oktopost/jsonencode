@@ -36,10 +36,22 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		self::assertNull($res);
 	}
 	
+	public function test_InvalidUTFCharecterInInvalidJson_ReturnFalse()
+	{
+		$str = '{"a":"' . self::invalidStr() . '}';
+		self::assertNull(jsondecode($str));
+	}
+	
 	public function test_InvalidJson_RetainError()
 	{
-		jsondecode('"{"a":}"');
+		jsondecode('{"a":}');
 		self::assertEquals(json_last_error(), JSON_ERROR_SYNTAX);
+	}
+	
+	public function test_InvalidUTFChar_LastErrorIsZero()
+	{
+		jsondecode('{"a":"' . self::INVALID_CHAR . '"}');
+		self::assertEquals(0, json_last_error());
 	}
 	
 	public function test_ComplexObjectWithInvalidString()
