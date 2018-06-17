@@ -1,4 +1,7 @@
 <?php
+use function JsonEncode\getValidString;
+
+
 /**
  * @param mixed $value
  * @param array|int|null $options
@@ -8,7 +11,9 @@
 function jsonencode($value, $options = null, ?int $depth = null)
 {
 	static $opt = [
-		'flag' => null
+		'flag'		=> null,
+		'replace'	=> '',
+		'depth'		=> 512
 	];
 	
 	// Setup options
@@ -20,7 +25,8 @@ function jsonencode($value, $options = null, ?int $depth = null)
 		else 
 			$options = $opt;
 		
-		$options['depth'] = $depth ?? 512;
+		if ($depth)
+			$options['depth'] = $depth;
 	}
 	
 	$result = json_encode($value, $options['flag'], $options['depth']);
@@ -30,6 +36,9 @@ function jsonencode($value, $options = null, ?int $depth = null)
 	
 	if (is_string($value))
 	{
+		require_once __DIR__ . '/UTFValidation.php';
+		$value = getValidString($value, $options['replace']);
+		
 		/**
 		 * Following RFC standard.
  		 * @link https://tools.ietf.org/html/rfc7159

@@ -24,11 +24,6 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		self::assertValueDecode((object)[1, 'a', '2' => 3, '4' => (object)['a' => 123], 'asd' => [1, 'a', true, null]]);
 	}
 	
-	public function test_InvalidString()
-	{
-		self::assertValueDecode(self::INVALID_STRINGS);
-	}
-	
 	
 	public function test_InvalidJson_ReturnFalse()
 	{
@@ -59,7 +54,6 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		$obj = new \stdClass();
 		$obj->a = 'b';
 		$obj->b = [0 => 'b'];
-		$obj->c = self::INVALID_STRINGS;
 		$obj->d = 1;
 		$obj->e = null;
 		$obj->f = '';

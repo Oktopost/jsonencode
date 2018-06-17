@@ -1,9 +1,9 @@
 <?php
 class JsonencodeTestCase extends PHPUnit\Framework\TestCase
 {
-	public const INVALID_STRINGS 				= "hello \0,,\u{d83d},😠,\\,\",\n,\r,' world";
 	public const INVALID_CHAR 					= "\u{d83d}";
-	public const EXPECTED_INVALID_JSON_ENCODING = "hello \\u0000,\\u001f,\u{d83d},😠,\\\\,\\\",\\n,\\r,' world";
+	public const INVALID_STRINGS 				= "hello \0,,\u{d83d},😠,\\,\",\n,\r,' world";
+	public const EXPECTED_INVALID_JSON_ENCODING = "hello \\u0000,\\u001f,,😠,\\\\,\\\",\\n,\\r,' world";
 	
 	
 	public static function invalidStr(): string
@@ -33,15 +33,18 @@ class JsonencodeTestCase extends PHPUnit\Framework\TestCase
 		self::assertEquals($aError, $bError);
 	}
 	
-	public static function assertValueDecode($value)
+	public static function assertValueDecode($value, $expect = null)
 	{
+		if (is_null($expect))
+			$expect = $value;
+		
 		if ($value instanceof \stdClass)
 		{
-			self::assertEquals($value, jsondecode(jsonencode($value)));
+			self::assertEquals($expect, jsondecode(jsonencode($value)));
 		}
 		else
 		{
-			self::assertSame($value, jsondecode(jsonencode($value)));
+			self::assertSame($expect, jsondecode(jsonencode($value)));
 		}
 	}
 }
