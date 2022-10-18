@@ -1,7 +1,7 @@
 <?php
 class StandardJsondecodeTest extends JsonencodeTestCase
 {
-	public function test_SimpleValues()
+	public function test_SimpleValues(): void
 	{
 		self::assertValueDecode([]);
 		self::assertValueDecode('');
@@ -19,37 +19,37 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 	}
 	
 	
-	public function test_ComplexArray()
+	public function test_ComplexArray(): void
 	{
 		self::assertValueDecode((object)[1, 'a', '2' => 3, '4' => (object)['a' => 123], 'asd' => [1, 'a', true, null]]);
 	}
 	
 	
-	public function test_InvalidJson_ReturnFalse()
+	public function test_InvalidJson_ReturnFalse(): void
 	{
 		$res = jsondecode('"{"a":}"');
 		self::assertNull($res);
 	}
 	
-	public function test_InvalidUTFCharecterInInvalidJson_ReturnFalse()
+	public function test_InvalidUTFCharecterInInvalidJson_ReturnFalse(): void
 	{
 		$str = '{"a":"' . self::invalidStr() . '}';
 		self::assertNull(jsondecode($str));
 	}
 	
-	public function test_InvalidJson_RetainError()
+	public function test_InvalidJson_RetainError(): void
 	{
 		jsondecode('{"a":}');
 		self::assertEquals(json_last_error(), JSON_ERROR_SYNTAX);
 	}
 	
-	public function test_InvalidUTFChar_LastErrorIsZero()
+	public function test_InvalidUTFChar_LastErrorIsZero(): void
 	{
 		jsondecode('{"a":"' . self::INVALID_CHAR . '"}');
 		self::assertEquals(0, json_last_error());
 	}
 	
-	public function test_ComplexObjectWithInvalidString()
+	public function test_ComplexObjectWithInvalidString(): void
 	{
 		$obj = new \stdClass();
 		$obj->a = 'b';
@@ -66,6 +66,24 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		$obj->j = $dd;
 		
 		self::assertValueDecode($obj);
+	}
+	
+	
+	public function test_jsondecode_a(): void
+	{
+		self::assertNull(jsondecode_a("null"));
+		
+		$res = jsondecode_a("{\"a\":{\"b\":2}}");
+		
+		self::assertTrue(is_array($res));
+		self::assertTrue(is_array($res['a'] ?? null));
+	}
+	
+	public function test_jsondecode_std(): void
+	{
+		self::assertNull(jsondecode_std("null"));
+		self::assertInstanceOf(stdClass::class, jsondecode_std("{\"a\":1}"));
+		self::assertTrue(is_array(jsondecode_std("[1, 2]")));
 	}
 }
 

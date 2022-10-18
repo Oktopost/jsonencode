@@ -162,3 +162,13 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 	
 	return $result;
 }
+
+function jsondecode_a($value)
+{
+	return jsondecode($value, JSON_OBJECT_AS_ARRAY);
+}
+
+function jsondecode_std($value)
+{
+	return jsondecode($value);
+}
