@@ -11,7 +11,7 @@ use function JsonEncode\getValidString;
 function jsonencode($value, $options = null, ?int $depth = null)
 {
 	static $opt = [
-		'flag'		=> null,
+		'flag'		=> 0,
 		'replace'	=> '',
 		'depth'		=> 512
 	];

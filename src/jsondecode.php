@@ -9,7 +9,7 @@
 function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0)
 {
 	static $opt = [
-		'flag' => null
+		'flag' => 0
 	];
 	
 	// Setup options
