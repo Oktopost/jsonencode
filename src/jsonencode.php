@@ -29,7 +29,7 @@ function jsonencode($value, $options = null, ?int $depth = null)
 			$options['depth'] = $depth;
 	}
 	
-	$result = json_encode($value, $options['flag'], $options['depth']);
+	$result = json_encode($value, $options['flag'] ?? 0, $options['depth']);
 	
 	if ($result !== false || json_last_error() != JSON_ERROR_UTF8)
 		return $result;
