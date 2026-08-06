@@ -3,6 +3,7 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 {
 	private $logger;
 	
+	
 	protected function setUp(): void
 	{
 		$this->logger = new class extends \Psr\Log\AbstractLogger
@@ -22,6 +23,7 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		\JsonEncode\Config::setLogger($this->logger);
 	}
 	
+	
 	public function test_SimpleValues(): void
 	{
 		self::assertValueDecode([]);
@@ -39,12 +41,10 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		self::assertValueDecode((object)['a' => 'b']);
 	}
 	
-	
 	public function test_ComplexArray(): void
 	{
 		self::assertValueDecode((object)[1, 'a', '2' => 3, '4' => (object)['a' => 123], 'asd' => [1, 'a', true, null]]);
 	}
-	
 	
 	public function test_InvalidJson_ReturnFalse(): void
 	{
@@ -128,4 +128,3 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		self::assertSame([], $this->logger->records);
 	}
 }
-
