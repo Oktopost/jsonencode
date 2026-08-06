@@ -1,6 +1,27 @@
 <?php
 class StandardJsondecodeTest extends JsonencodeTestCase
 {
+	private $logger;
+	
+	protected function setUp(): void
+	{
+		$this->logger = new class extends \Psr\Log\AbstractLogger
+		{
+			public $records = [];
+			
+			public function log($level, $message, array $context = []): void
+			{
+				$this->records[] = [
+					'level'		=> $level,
+					'message'	=> $message,
+					'context'	=> $context
+				];
+			}
+		};
+		
+		\JsonEncode\Config::setLogger($this->logger);
+	}
+	
 	public function test_SimpleValues(): void
 	{
 		self::assertValueDecode([]);
@@ -85,6 +106,26 @@ class StandardJsondecodeTest extends JsonencodeTestCase
 		self::assertInstanceOf(stdClass::class, jsondecode_std("{\"a\":1}"));
 		self::assertTrue(is_array(jsondecode_std("[1, 2]")));
 	}
+	
+	public function test_NonStringValue_LogsCriticalBeforeDecode(): void
+	{
+		try
+		{
+			jsondecode([]);
+		}
+		catch (\Throwable $e)
+		{
+		}
+		
+		self::assertSame('critical', $this->logger->records[0]['level']);
+		self::assertSame('Got non string value in jsondecode', $this->logger->records[0]['message']);
+	}
+	
+	public function test_StringValue_DoesNotLog(): void
+	{
+		jsondecode('"a"');
+		
+		self::assertSame([], $this->logger->records);
+	}
 }
-
 
