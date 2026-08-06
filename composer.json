@@ -14,12 +14,16 @@
         }
     ],
     "require": {
-		"php": ">=7.1"
+		"php": ">=7.1",
+		"psr/log": "^1.1 || ^2.0 || ^3.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^10.5"
 	},
     "autoload": {
+		"psr-4": {
+			"JsonEncode\\": "src/"
+		},
 		"files": [
 			"src/jsonencode.php",
 			"src/jsondecode.php"
