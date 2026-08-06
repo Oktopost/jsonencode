@@ -1,4 +1,9 @@
 <?php
+
+
+use JsonEncode\Config;
+
+
 /**
  * @param mixed $value
  * @param bool|array $options
@@ -12,6 +17,8 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 		'flag' => null
 	];
 	
+	static $isLogged = false;
+	
 	// Setup options
 	{
 		if (is_array($options))
@@ -21,6 +28,24 @@ function jsondecode($value, $options = false, ?int $depth = null, int $flags = 0
 		
 		$options['depth'] = $depth ?? 512;
 		$options['flag']  = $flags;
+	}
+	
+	if (!is_string($value))
+	{
+		$logger = Config::getLogger();
+		$logger->critical('Got non string value in jsondecode');
+	}
+
+	if (!$isLogged && (
+		memory_get_usage() > 400 * 1000 * 1000 ||
+		(is_string($value) && strlen($value) > 400 * 1000 * 1000)
+		)
+	)
+	{
+		$isLogged = true;
+		
+		$logger = Config::getLogger();
+		$logger->warning('Got huge payload or mem limit!', ['exception' => new \Exception()]);
 	}
 	
 	$result = json_decode($value, $options['assoc'], $options['depth'], $options['flag']);
